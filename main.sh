@@ -4,8 +4,8 @@ while true
 do
 # 检查当前IP联通性 （鉴于现在基本只墙IP，直接检查大陆互联
 # 联通则什么都不做，不联通则更换IP）
-# 三次检查 通过则退出
-curl -4 baidu.com > /dev/null 2>&1 || curl -4 baidu.com > /dev/null 2>&1 || curl -4 baidu.com > /dev/null 2>&1 && exit 0
+# 三次检查 通过则退出 5秒超时
+curl -4 -m 5 -s baidu.com > /dev/null 2>&1 || curl -4 -m 5 -s baidu.com > /dev/null 2>&1 || curl -4 -m 5 -s baidu.com > /dev/null 2>&1 && exit 0
 
 # 如果没有安装jq （只考虑 oracle linux
 if ! command -v jq &> /dev/null
