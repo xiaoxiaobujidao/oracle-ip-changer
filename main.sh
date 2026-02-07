@@ -13,7 +13,7 @@ curl -4 -m 5 -s baidu.com > /dev/null 2>&1 || curl -4 -m 5 -s baidu.com > /dev/n
 if ! command -v jq &> /dev/null
 then
     echo "jq is not installed, installing..."
-    sudo dnf install -y jq
+    dnf install -y jq
 fi
 
 # 获取当前IP
