@@ -50,6 +50,7 @@ do
     echo "新建公共ip失败，重试..."
     sleep 10
 done
+echo "nameserver 1.1.1.1" > /etc/resolv.conf
 
 date
 echo "IP更换完成"
