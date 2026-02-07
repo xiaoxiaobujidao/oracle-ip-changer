@@ -41,14 +41,15 @@ json=$(oci network public-ip get --public-ip-address $public_ip --config-file $C
 publicipId=$(echo $json | jq -r '.data.id')
 #获取私有ip ID
 privateipId=$(echo $json | jq -r '.data."private-ip-id"')			
+echo "nameserver 2a00:1098:2c::1" > /etc/resolv.conf
+#删除原公共ip
+oci network public-ip delete --public-ip-id $publicipId --force --config-file $CONFIG_FILE
 #新建公共ip
 until oci network public-ip create -c $compartmentId --private-ip-id $privateipId --lifetime EPHEMERAL --config-file $CONFIG_FILE 
 do
     echo "新建公共ip失败，重试..."
     sleep 10
 done
-#删除原公共ip
-oci network public-ip delete --public-ip-id $publicipId --force --config-file $CONFIG_FILE
 
 date
 echo "IP更换完成"
