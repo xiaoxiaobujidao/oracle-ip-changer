@@ -44,7 +44,11 @@ privateipId=$(echo $json | jq -r '.data."private-ip-id"')
 #删除原公共ip
 oci network public-ip delete --public-ip-id $publicipId --force --config-file $CONFIG_FILE
 #新建公共ip
-oci network public-ip create -c $compartmentId --private-ip-id $privateipId --lifetime EPHEMERAL --config-file $CONFIG_FILE
+until oci network public-ip create -c $compartmentId --private-ip-id $privateipId --lifetime EPHEMERAL --config-file $CONFIG_FILE 
+do
+    echo "新建公共ip失败，重试..."
+    sleep 10
+done
 
 date
 echo "IP更换完成"
