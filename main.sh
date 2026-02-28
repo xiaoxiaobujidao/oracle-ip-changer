@@ -18,7 +18,7 @@ while true; do
 	fi
 
 	# 获取当前IP
-	public_ip=$(curl -s -4 ifconfig.me || continue)
+	public_ip=$(curl -s -4 ifconfig.me) || continue
 
 	# 打印时间
 	date
@@ -31,17 +31,17 @@ while true; do
 	CONFIG_FILE='/root/.oci/config'
 
 	# 获取compartmentId
-	compartmentId=$(oci iam user list --config-file $CONFIG_FILE | jq -r '.[][0]."compartment-id"' || continue)
+	compartmentId=$(oci iam user list --config-file $CONFIG_FILE | jq -r '.[][0]."compartment-id"') || continue
 
 	# 获取实例列表
-	instance_json=$(oci compute instance list -c $compartmentId --config-file $CONFIG_FILE || continue)
+	instance_json=$(oci compute instance list -c $compartmentId --config-file $CONFIG_FILE) || continue
 	echo $instance_json
 
-	json=$(oci network public-ip get --public-ip-address $public_ip --config-file $CONFIG_FILE || continue)
+	json=$(oci network public-ip get --public-ip-address $public_ip --config-file $CONFIG_FILE) || continue
 	# 获取公共ip ID
-	publicipId=$(echo $json | jq -r '.data.id' || continue)
+	publicipId=$(echo $json | jq -r '.data.id') || continue
 	#获取私有ip ID
-	privateipId=$(echo $json | jq -r '.data."private-ip-id"' || continue)
+	privateipId=$(echo $json | jq -r '.data."private-ip-id"') || continue
 	echo "nameserver 2a00:1098:2c::1" >/etc/resolv.conf
 	#删除原公共ip
 	oci network public-ip delete --public-ip-id $publicipId --force --config-file $CONFIG_FILE || continue
